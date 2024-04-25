@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import { ActiveLink } from "../../utils/ActiveLink";
+import { ActiveLink } from "../../../utils/ActiveLink";
 import logo from "public/logo/full_logo_green.png";
 import dash from "public/assets/dashboard.svg";
 import teal_dash from "public/assets/dashboard_teal.svg";
@@ -111,7 +111,7 @@ const Sidebar = ({ open, setOpen }: BarProps) => {
                 <div className="mt-4  flex flex-col">
                     <nav className="flex-1 flex flex-col gap-2 px-2 mb-24">
                         <div className="line-center">
-                            <Image src={logo} width={150} height={130} />
+                            {/*<Image src={logo} width={150} height={130} />**/}
                         </div>
                         <div className="line-left gap-4 mb-8 mt-4">
                             <div className="p-1 bg-teal-300 rounded-full">
@@ -126,8 +126,8 @@ const Sidebar = ({ open, setOpen }: BarProps) => {
                                 </div>
                             </div>
                         </div>
-                        {navigation.map((item) => (
-                            <div>
+                        {navigation.map((item, idx) => (
+                            <div key={idx}>
                                 <ActiveLink
                                     key={item.id}
                                     href={item.href}
@@ -140,7 +140,7 @@ const Sidebar = ({ open, setOpen }: BarProps) => {
                                     activeClassName=""
                                 >
                                     <a>
-                                        {actualLink === item.href ? (
+                                        {/*actualLink === item.href ? (
                                             <Image
                                                 src={item.selectedIcon}
                                                 height={25}
@@ -152,7 +152,7 @@ const Sidebar = ({ open, setOpen }: BarProps) => {
                                                 height={25}
                                                 width={25}
                                             />
-                                        )}
+                                        )*/}
 
                                         {item.name}
                                     </a>
@@ -215,8 +215,8 @@ const Sidebar = ({ open, setOpen }: BarProps) => {
             >
                 <div className="mt-4 mb-16 flex justify-betw flex-col">
                     <nav className=" flex flex-col gap-4 px-2">
-                        {navigation.map((item) => (
-                            <div>
+                        {navigation.map((item, idx) => (
+                            <div key={idx}>
                                 <ActiveLink
                                     key={item.id}
                                     href={item.href}

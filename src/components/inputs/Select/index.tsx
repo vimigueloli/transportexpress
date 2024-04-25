@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronDownIcon, CheckIcon } from "@heroicons/react/outline";
+import { BsChevronDown, BsCheck } from "react-icons/bs";
 
 interface SelectProps {
     items: {
@@ -60,7 +60,7 @@ export default function Select({
                 aria-expanded="false"
                 className="w-full text-md cursor-pointer bg-white text-gray-800 border-2 h-12 rounded-md border-gray-700/20 px-2 outline-none with-transition"
             />
-            <ChevronDownIcon
+            <BsChevronDown
                 width={40}
                 height={40}
                 onClick={() => setOpen(!open)}
@@ -89,7 +89,7 @@ export default function Select({
                             {selected ? (
                                 selected.name === response.name ? (
                                     <span className="absolute inset-y-0 right-0 flex items-center pr-6 text-gray-800">
-                                        <CheckIcon width={20} height={20} />
+                                        <BsCheck width={20} height={20} />
                                     </span>
                                 ) : (
                                     <></>
