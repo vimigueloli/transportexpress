@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #00ADB5;
+  -webkit-text-fill-color: #00ADB5;
+  -webkit-box-shadow: 0 0 0px 1000px #222831 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@media (min-width: 1024px) {
+    /* width */
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background-color: #ffffff;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background-color: #55555577;
+        border-radius: 10px;
+        transition-duration: 2s;
+        transition-property: background-color;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555555dd;
+        transition-duration: 2s;
+        transition-property: background-color;
+    }
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #ffffff;
+}
+
+li,
+ol {
+    list-style-type: none;
+}
+
+body,
+input,
+textarea,
+select,
+button {
+    font: 400 1rem "Roboto", sans-serif;
+}
+
+button {
+    cursor: pointer;
+
+    transition: 0.2s !important;
+}
+
+button:hover {
+    background-color: opacity(0.9) !important;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.sidebar {
+    height: calc(100% - 10%);
+    display: flex;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background: none;
+}
+
+@media (max-width: 1080px) {
+    html {
+        font-size: 93.75%;
+    }
+}
+
+@media (max-width: 720px) {
+    html {
+        font-size: 87.5%;
+    }
+}
+
+@layer components {
+    .with-transition {
+        @apply ease-in-out duration-500 transition-all;
+    }
+    .line-left {
+        @apply flex justify-start items-center;
+    }
+    .line-right {
+        @apply flex justify-end items-center;
+    }
+    .line-center {
+        @apply flex justify-center items-center;
+    }
+    .line-around {
+        @apply flex justify-around items-center;
+    }
+    .line-between {
+        @apply flex justify-between items-center;
+    }
+    .line-evenly {
+        @apply flex justify-evenly items-center;
+    }
+    .col-center {
+        @apply flex flex-col items-center;
+    }
+    .col-left {
+        @apply flex flex-col items-start;
+    }
+    .focused {
+        @apply border-none focus:border focus:border-orange-500;
+    }
+    .button {
+        @apply justify-center hover:opacity-50 items-center text-xs	 text-center relative inline-flex flex-shrink-0 border border-transparent rounded cursor-pointer focus:outline-none;
+    }
+    .focus-ring {
+        @apply focus:outline-none focus:ring ring-offset-2 ring-offset-gray-400 focus:ring-orange-500;
+    }
+    .transparent-in {
+        @apply bg-transparent text-sm py-2 pl-3 pr-8 outline-none border-b border-b-gray-200/50 focus:border-b-gray-200 text-white placeholder:text-white/20;
+    }
+    .input {
+        @apply text-black px-2 text-sm placeholder:text-black/50 disabled:opacity-75 border-0 outline-none bg-white;
+    }
+}
