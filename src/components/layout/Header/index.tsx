@@ -2,41 +2,53 @@ import Image from "next/image";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { HiHome, HiArrowNarrowLeft } from "react-icons/hi";
+import { HiArrowLeftOnRectangle } from "react-icons/hi2";
 
-interface HeaderProps {
-    open: boolean;
-    setOpen: Function;
-}
-
-const Header = ({ open, setOpen }: HeaderProps) => {
+const Header = () => {
     const router = useRouter();
     const [name, setName] = useState("");
 
-    return (
-        <header className="fixed flex items-center justify-between bg-white  lpx-12 border-b-2 border-teal-300 w-screen z-50 h-16 lg:hidden">
-            {open ? (
-                <AiOutlineClose
-                    onClick={() => setOpen(false)}
-                    width={30}
-                    height={30}
-                    className="block lg:hidden ml-4 cursor-pointer text-teal-300"
-                />
-            ) : (
-                <AiOutlineMenu
-                    onClick={() => setOpen(true)}
-                    width={30}
-                    height={30}
-                    className="block lg:hidden ml-4 cursor-pointer text-teal-300"
-                />
-            )}
+    async function handleHome() {
+        router.push("/system/home");
+    }
 
-            {/*<div className="hidden lg:ml-4 lg:block">
-                <Image src="/assets/logo.svg" width="142" height="48" />
+    async function handleBack() {
+        router.back();
+    }
+
+    async function handleLogout() {}
+
+    return (
+        <header className="fixed px-8 text-mainLight-100 flex items-center justify-between bg-mainDark-400 border-b border-mainLight-500 w-screen h-12">
+            <div>
+                {router.asPath.includes("home") ? (
+                    <div
+                        className="button text-mainLight-500 with-transition"
+                        onClick={() => handleLogout()}
+                    >
+                        <HiArrowLeftOnRectangle size={25} />
+                    </div>
+                ) : (
+                    <div
+                        className="button text-mainLight-500 with-transition"
+                        onClick={() => handleBack()}
+                    >
+                        <HiArrowNarrowLeft size={25} />
+                    </div>
+                )}
             </div>
 
-            <div className="lg:hidden sm:block translate-x-10 hidden">
-                <Image src="/assets/logo.svg" width="100" height="32" />
-        </div>*/}
+            <div>logo</div>
+
+            <div>
+                <div
+                    className="button text-mainLight-500 with-transition"
+                    onClick={() => handleHome()}
+                >
+                    <HiHome size={25} />
+                </div>
+            </div>
         </header>
     );
 };

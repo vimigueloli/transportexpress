@@ -1,5 +1,7 @@
-import { setupApiClient } from './apiServerSide';
+import axios from "axios";
 
-const api = setupApiClient();
+const api = axios.create({
+    baseURL: process.env.API_URL,
+});
 
 export default api;

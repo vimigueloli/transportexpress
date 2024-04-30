@@ -1,26 +1,29 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import { useState } from "react";
 import PassInput from "@/components/inputs/PasswordInput";
 import toast from "react-hot-toast";
 import Loading from "react-loading";
-
-const inter = Inter({ subsets: ["latin"] });
+import { useRouter } from "next/router";
+import api from "@/services/api";
+import { setCookie } from "nookies";
 
 export default function Home() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const router = useRouter();
 
     async function handleLogin(e: Event) {
         e.preventDefault();
         setLoading(true);
         try {
-            await setTimeout(() => {
-                console.log("envia a requisição 🌐");
-                toast.success("✅ Login efetuado com sucesso!");
-                setLoading(false);
-            }, 5000);
+            const response = await api.post("/login", {
+                email,
+                password,
+            });
+            console.log("response", response.data);
+            setCookie(null, "token", response.data?.token);
+            toast.success("✅ Login efetuado com sucesso!");
+            router.push("/system/home");
         } catch (err: any) {
             console.log("erro ->", err);
             toast.error("⚠️Falha ao executar o login");
