@@ -1,5 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# enviroment
+.env
+*.env
+env
+
 # dependencies
 /node_modules
 /.pnp
@@ -35,7 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# enviroment
-*.env
-.env
-env
+
