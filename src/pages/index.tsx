@@ -20,8 +20,9 @@ export default function Home() {
                 email,
                 password,
             });
-            console.log("response", response.data);
-            setCookie(null, "token", response.data?.token);
+            setCookie(null, "token", response.data?.token, {
+                maxAge: 30 * 24 * 60 * 60,
+            });
             toast.success("✅ Login efetuado com sucesso!");
             router.push("/system/home");
         } catch (err: any) {

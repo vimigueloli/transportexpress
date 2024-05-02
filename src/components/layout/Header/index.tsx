@@ -4,8 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { HiHome, HiArrowNarrowLeft } from "react-icons/hi";
 import { HiArrowLeftOnRectangle } from "react-icons/hi2";
+import { destroyCookie } from "nookies";
 
-const Header = () => {
+interface HeaderProps {
+    title?: string;
+}
+
+const Header = ({ title }: HeaderProps) => {
     const router = useRouter();
     const [name, setName] = useState("");
 
@@ -17,7 +22,13 @@ const Header = () => {
         router.back();
     }
 
-    async function handleLogout() {}
+    async function handleLogout() {
+        const shure = confirm("deseja mesmo sair do sistema?");
+        if (shure) {
+            destroyCookie(null, "token");
+            router.back();
+        }
+    }
 
     return (
         <header className="fixed px-8 text-mainLight-100 flex items-center justify-between bg-mainDark-400 border-b border-mainLight-500 w-screen h-12">
@@ -39,7 +50,7 @@ const Header = () => {
                 )}
             </div>
 
-            <div>logo</div>
+            {title ? <div>{title}</div> : <div>logo</div>}
 
             <div>
                 <div

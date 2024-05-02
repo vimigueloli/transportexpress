@@ -4,17 +4,17 @@ import { GetServerSideProps } from "next";
 import api from "@/services/api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { cpfMask } from "@/utils/masks";
 import Loading from "react-loading";
 import { parseCookies } from "nookies";
+import { numberMask, plateMask } from "@/utils/masks";
 
 interface DriverFormProps {
     id: number | string;
 }
 
 export default function DriverForm({ id }: DriverFormProps) {
-    const [cpf, setCpf] = useState<string>("");
-    const [name, setName] = useState<string>("");
+    const [plate, setPlate] = useState<string>("");
+    const [renavan, setRenavan] = useState<string>("");
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const cookies = parseCookies();
@@ -24,13 +24,13 @@ export default function DriverForm({ id }: DriverFormProps) {
         async function loadDriver() {
             setLoading(true);
             try {
-                const response = await api.get(`drivers/${id}`, {
+                const response = await api.get(`trucks/${id}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.token}`,
                     },
                 });
-                setCpf(response.data.cpf);
-                setName(response.data.name);
+                setPlate(response.data.plate);
+                setRenavan(response.data.renavan);
                 setLoading(false);
             } catch (err: any) {
                 toast.error("falha ao carregar motorista");
@@ -46,20 +46,20 @@ export default function DriverForm({ id }: DriverFormProps) {
     async function handleFormSubmmit(e: FormEvent) {
         e.preventDefault();
         if (id === "new") {
-            handleRegisterDriver();
+            handleRegisterTruck();
         } else {
-            handleUpdateDriver();
+            handleUpdateTruck();
         }
     }
 
-    async function handleRegisterDriver() {
+    async function handleRegisterTruck() {
         setLoading(true);
         try {
             await api.post(
-                "/drivers",
+                "/trucks",
                 {
-                    name,
-                    cpf,
+                    renavan,
+                    plate,
                 },
                 {
                     headers: {
@@ -67,24 +67,24 @@ export default function DriverForm({ id }: DriverFormProps) {
                     },
                 }
             );
-            toast.success("✅ Motorista registrado com sucesso");
+            toast.success("✅ Caminhão registrado com sucesso");
             setLoading(false);
             router.back();
         } catch (e) {
             console.log("erro->", e);
-            toast.error("Falha ao registrar motorista");
+            toast.error("Falha ao registrar caminhão");
             setLoading(false);
         }
     }
 
-    async function handleUpdateDriver() {
+    async function handleUpdateTruck() {
         setLoading(true);
         try {
             await api.put(
-                `drivers/${id}`,
+                `trucks/${id}`,
                 {
-                    name,
-                    cpf,
+                    renavan,
+                    plate,
                 },
                 {
                     headers: {
@@ -92,12 +92,12 @@ export default function DriverForm({ id }: DriverFormProps) {
                     },
                 }
             );
-            toast.success("✅ Motorista atualizado com sucesso");
+            toast.success("✅ Caminhão atualizado com sucesso");
             setLoading(false);
             router.back();
         } catch (e) {
             console.log("erro->", e);
-            toast.error("Falha ao atualizar motorista");
+            toast.error("Falha ao atualizar caminhão");
             setLoading(false);
         }
     }
@@ -118,29 +118,35 @@ export default function DriverForm({ id }: DriverFormProps) {
                     >
                         <div className="line-center sm:line-left w-full text-mainLight-100 font-semibold text-3xl">
                             {id === "new"
-                                ? "Registrar Motorista"
-                                : "Atualizar Motorista"}
+                                ? "Registrar Caminhão"
+                                : "Atualizar Caminhão"}
                         </div>
                         <div className="line-left w-full sm:w-64 flex-wrap gap-2">
-                            <label>Nome</label>
+                            <label>Placa</label>
                             <input
-                                value={name}
+                                value={plate}
                                 className="w-full h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                                placeholder="nome"
-                                onChange={(e: any) => setName(e.target.value)}
+                                placeholder="AAA-0000"
+                                maxLength={8}
+                                minLength={8}
                                 required
+                                onChange={(e: any) =>
+                                    setPlate(
+                                        plateMask(
+                                            String(e.target.value).toUpperCase()
+                                        )
+                                    )
+                                }
                             />
                         </div>
                         <div className="line-left w-full sm:w-64 flex-wrap gap-2">
-                            <label>CPF</label>
+                            <label>Renavan</label>
                             <input
-                                value={cpf}
+                                value={renavan}
                                 className="w-full h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                                placeholder="000.000.000-00"
-                                maxLength={14}
-                                // minLength={14}
+                                placeholder="00000000000000"
                                 onChange={(e: any) =>
-                                    setCpf(cpfMask(e.target.value))
+                                    setRenavan(numberMask(e.target.value))
                                 }
                             />
                         </div>

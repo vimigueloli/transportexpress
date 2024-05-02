@@ -14,7 +14,7 @@ export default function Home() {
     const menuOptions: MenuOptionProps[] = [
         {
             icon: <RiTruckFill size={50} />,
-            path: "",
+            path: "trucks",
             name: "caminhões",
         },
         {
@@ -24,15 +24,15 @@ export default function Home() {
         },
         {
             icon: <RiTreasureMapFill size={50} />,
-            path: "",
+            path: "paths",
             name: "trechos",
         },
     ];
 
     return (
         <Layout>
-            <div className="w-full h-full line-center">
-                <div className="w-1/3  line-center gap-8 flex-wrap">
+            <div className="w-full h-full px-4 sm:px-0 line-center">
+                <div className="w-full sm:w-1/2   line-center gap-8 flex-wrap">
                     {menuOptions.map((item: MenuOptionProps) => (
                         <div
                             key={item.name}

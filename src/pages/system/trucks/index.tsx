@@ -8,74 +8,76 @@ import { parseCookies } from "nookies";
 import { IoTrashBin, IoPencil } from "react-icons/io5";
 import Loading from "react-loading";
 
-interface Driver {
+interface Truck {
     id: number;
-    name: string;
-    cpf?: string;
+    plate: string;
+    renavan?: string;
 }
 
-export default function Drivers() {
-    const [drivers, setDrivers] = useState<Driver[]>([]);
+export default function Truckers() {
+    const [trucks, setTrucks] = useState<Truck[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
     const cookies = parseCookies();
 
-    async function handleNewDriver() {
-        router.push("drivers/form/new");
+    async function handleNewTruck() {
+        router.push("trucks/form/new");
     }
 
-    async function handleEditDriver(driverId: number) {
-        router.push(`drivers/form/${driverId}`);
+    async function handleEditTruck(truckId: number) {
+        router.push(`trucks/form/${truckId}`);
     }
 
-    async function handleDeleteDriver(driverId: number, name: string) {
-        const shure = confirm(`Deseja mesmo deletar o motorista ${name}`);
+    async function handleDeleteTruck(truckId: number, plate: string) {
+        const shure = confirm(
+            `Deseja mesmo deletar o caminhão de placa ${plate}`
+        );
         if (shure) {
             setLoading(true);
             try {
-                await api.delete(`drivers/${driverId}`, {
+                await api.delete(`trucks/${truckId}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.token}`,
                     },
                 });
-                toast.success("🚨Motorista deletado com sucesso");
-                loadDrivers();
+                toast.success("🚨 Caminhão deletado com sucesso");
+                loadtrucks();
             } catch (e: any) {
                 console.log("error->", e);
-                toast.error("Falha ao deletar motorista");
+                toast.error("Falha ao deletar caminhão");
             }
         }
     }
 
-    async function loadDrivers() {
+    async function loadtrucks() {
         setLoading(true);
         try {
-            const response = await api.get("drivers", {
+            const response = await api.get("trucks", {
                 headers: {
                     Authorization: `Bearer ${cookies.token}`,
                 },
             });
-            setDrivers(response.data.drivers);
+            setTrucks(response.data.trucks);
             setLoading(false);
         } catch (e: any) {
-            toast.error("Falha ao acarregar os Motoristas");
+            toast.error("Falha ao acarregar os Caminhões");
             setLoading(false);
         }
     }
 
     useEffect(() => {
-        loadDrivers();
+        loadtrucks();
     }, []);
 
     return (
-        <Layout title="Motoristas">
+        <Layout title="Caminhões">
             <div className="w-full">
                 <div className="line-right my-8 px-4 sm:px-16">
                     <div
                         className="button px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
-                        onClick={() => handleNewDriver()}
+                        onClick={() => handleNewTruck()}
                     >
-                        Adicionar Motorista
+                        Adicionar Caminhão
                     </div>
                 </div>
                 <div className="line-center px-4 sm:px-16 mt-8 w-full">
@@ -85,9 +87,9 @@ export default function Drivers() {
                         </div>
                     )}
                     {!loading &&
-                        (drivers.length > 0 ? (
-                            <Table columns={["Nome", "CPF", "Ações"]}>
-                                {drivers.map((item: Driver, idx: number) => (
+                        (trucks.length > 0 ? (
+                            <Table columns={["Placa", "Renavan", "Ações"]}>
+                                {trucks.map((item: Truck, idx: number) => (
                                     <tr
                                         key={item.id}
                                         className={`
@@ -99,18 +101,18 @@ export default function Drivers() {
                                     `}
                                     >
                                         <td className="text-center">
-                                            {item.name}
+                                            {item.plate}
                                         </td>
                                         <td className="text-center">
-                                            {item.cpf || "Sem Registro"}
+                                            {item.renavan || "Sem registro"}
                                         </td>
                                         <td className="line-center gap-2 h-12 ">
                                             <div
                                                 className="text-red-600 button with-transition"
                                                 onClick={() =>
-                                                    handleDeleteDriver(
+                                                    handleDeleteTruck(
                                                         item.id,
-                                                        item.name
+                                                        item.plate
                                                     )
                                                 }
                                             >
@@ -119,7 +121,7 @@ export default function Drivers() {
                                             <div
                                                 className="text-mainLight-500 button with-transition"
                                                 onClick={() =>
-                                                    handleEditDriver(item.id)
+                                                    handleEditTruck(item.id)
                                                 }
                                             >
                                                 <IoPencil size={20} />
