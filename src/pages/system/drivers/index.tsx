@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import api from "@/services/api";
 import { parseCookies } from "nookies";
-import { IoTrashBin, IoPencil } from "react-icons/io5";
+import { IoTrashBin, IoPencil, IoReader } from "react-icons/io5";
 import Loading from "react-loading";
 
 interface Driver {
@@ -26,6 +26,10 @@ export default function Drivers() {
 
     async function handleEditDriver(driverId: number) {
         router.push(`drivers/form/${driverId}`);
+    }
+
+    async function handleDriverHistory(driverId: number) {
+        router.push(`drivers/history/${driverId}`);
     }
 
     async function handleDeleteDriver(driverId: number, name: string) {
@@ -115,6 +119,14 @@ export default function Drivers() {
                                                 }
                                             >
                                                 <IoTrashBin size={20} />
+                                            </div>
+                                            <div
+                                                className="text-mainLight-500 button with-transition"
+                                                onClick={() =>
+                                                    handleDriverHistory(item.id)
+                                                }
+                                            >
+                                                <IoReader size={20} />
                                             </div>
                                             <div
                                                 className="text-mainLight-500 button with-transition"
