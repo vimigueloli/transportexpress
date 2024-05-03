@@ -9,11 +9,12 @@ import { IoTrashBin, IoPencil } from "react-icons/io5";
 import Loading from "react-loading";
 import { money } from "@/utils/masks";
 
-interface Path {
+export interface Path {
     id: number;
     origin: string;
     destination: string;
     suggested_price: number;
+    name?: string;
 }
 
 export default function Paths() {

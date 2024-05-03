@@ -8,7 +8,7 @@ import { parseCookies } from "nookies";
 import { IoTrashBin, IoPencil, IoReader } from "react-icons/io5";
 import Loading from "react-loading";
 
-interface Driver {
+export interface Driver {
     id: number;
     name: string;
     cpf?: string;

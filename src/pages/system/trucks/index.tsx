@@ -8,10 +8,11 @@ import { parseCookies } from "nookies";
 import { IoTrashBin, IoPencil } from "react-icons/io5";
 import Loading from "react-loading";
 
-interface Truck {
+export interface Truck {
     id: number;
     plate: string;
     renavan?: string;
+    name?: string;
 }
 
 export default function Truckers() {

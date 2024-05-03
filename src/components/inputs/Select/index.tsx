@@ -2,24 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { BsChevronDown, BsCheck } from "react-icons/bs";
 
 interface SelectProps {
-    items: {
-        name: string;
-        id: string;
-    }[];
+    items: any[];
     changeSel: Function;
-    selected: { name: string; id: string };
-    width?: string;
+    selected: any;
+    className?: string;
 }
 
 export default function Select({
     items,
     selected,
     changeSel,
-    width = "st:w-36",
+    className,
 }: SelectProps) {
     const [open, setOpen] = useState(false);
 
-    function handleChange(response: { name: string; id: string }) {
+    function handleChange(response: any) {
         changeSel(response);
         setOpen(!open);
     }
@@ -46,19 +43,20 @@ export default function Select({
     }, [open]);
 
     return (
-        <div className={`relative w-full ${width} h-12`}>
+        <div className="w-full">
             <input
                 required
                 autoComplete="off"
                 id="combobox"
                 type="text"
+                readOnly
                 value={selected ? selected.name : ""}
                 onFocus={() => setOpen(true)}
                 role="combobox"
                 aria-controls="options"
                 aria-autocomplete="none"
                 aria-expanded="false"
-                className="w-full text-md cursor-pointer bg-white text-gray-800 border-2 h-12 rounded-md border-gray-700/20 px-2 outline-none with-transition"
+                className={className}
             />
             <BsChevronDown
                 width={40}
@@ -71,7 +69,7 @@ export default function Select({
                 ref={ref}
                 className={`${
                     open ? "block" : "hidden"
-                } with-transition absolute z-10 mt-2 max-h-60 w-full overflow-auto rounded-md border border-gray-700/20 bg-white backdrop-blur py-1 text-base ring-2 ring-gray-700/20 ring-opacity-5 focus:outline-none sm:text-sm" id="options" role="listbox`}
+                } with-transition absolute z-10 mt-2 max-h-60 w-64 overflow-auto rounded-md border border-mainLight-500 bg-mainDark-400 backdrop-blur py-1 text-base ring-2 ring-gray-700/20 ring-opacity-5 focus:outline-none sm:text-sm" id="options" role="listbox`}
             >
                 {items.map((response) => {
                     return (
@@ -81,14 +79,14 @@ export default function Select({
                             id="option-0"
                             role="option"
                             tabIndex={-1}
-                            className=" cursor-pointer bg-white text-sm relative select-none py-2 pl-3 with-transition hover:bg-teal-300 hover:text-white text-gray-800 "
+                            className=" cursor-pointer bg-mainDark-400 text-sm relative select-none py-2 pl-3 with-transition hover:bg-mainDark-600 hover:text-mainLight-500 text-mainLight-100 "
                         >
                             <span className="block truncate">
                                 {response.name}
                             </span>
                             {selected ? (
                                 selected.name === response.name ? (
-                                    <span className="absolute inset-y-0 right-0 flex items-center pr-6 text-gray-800">
+                                    <span className="absolute inset-y-0 right-0 flex items-center pr-6 text-mainLight-500">
                                         <BsCheck width={20} height={20} />
                                     </span>
                                 ) : (
