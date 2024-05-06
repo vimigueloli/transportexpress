@@ -6,6 +6,7 @@ interface SelectProps {
     changeSel: Function;
     selected: any;
     className?: string;
+    required?: boolean;
 }
 
 export default function Select({
@@ -13,6 +14,7 @@ export default function Select({
     selected,
     changeSel,
     className,
+    required,
 }: SelectProps) {
     const [open, setOpen] = useState(false);
 
@@ -45,7 +47,6 @@ export default function Select({
     return (
         <div className="w-full">
             <input
-                required
                 autoComplete="off"
                 id="combobox"
                 type="text"
@@ -57,6 +58,7 @@ export default function Select({
                 aria-autocomplete="none"
                 aria-expanded="false"
                 className={className}
+                required={required}
             />
             <BsChevronDown
                 width={40}

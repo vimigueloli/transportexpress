@@ -31,7 +31,7 @@ const Header = ({ title }: HeaderProps) => {
     }
 
     return (
-        <header className="fixed px-8 text-mainLight-100 flex items-center justify-between bg-mainDark-400 border-b border-mainLight-500 w-screen h-12">
+        <header className="fixed z-50 px-8 text-mainLight-100 flex items-center justify-between bg-mainDark-400 border-b border-mainLight-500 w-screen h-12">
             <div>
                 {router.asPath.includes("home") ? (
                     <div

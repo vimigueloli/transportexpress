@@ -13,6 +13,7 @@ import {
     IoChevronForwardCircleSharp,
 } from "react-icons/io5";
 import TravelForm from "@/components/forms/travelForm";
+import TravelItem, { Travel } from "@/components/listItem/travelItem";
 
 interface DriverFormProps {
     id: number | string;
@@ -23,33 +24,36 @@ export default function HistoryForm({ id }: DriverFormProps) {
     const [name, setName] = useState<string>("");
     const [month, setMonth] = useState<string>(moment().format("MM"));
     const [year, setYear] = useState<string>(moment().format("YYYY"));
+    const [travels, setTravels] = useState<Travel[]>([]);
     const [showTravelForm, setShowTravelForm] = useState<boolean>(false);
     const cookies = parseCookies();
     const router = useRouter();
 
-    // ? load user data if its exist
+    // ? load travels
     useEffect(() => {
-        async function loadDriver() {
+        async function loadDriversTravels() {
             setLoading(true);
             try {
-                const response = await api.get(`drivers/${id}`, {
+                const response = await api.get(`/drivers-travels/${id}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.token}`,
                     },
+                    params: {
+                        month: month,
+                        year: year,
+                    },
                 });
-                setName(response.data.name);
+                setTravels(response.data.travels);
                 setLoading(false);
             } catch (err: any) {
                 toast.error("falha ao carregar motorista");
                 setLoading(false);
-                router.back();
+                // router.back();
             }
         }
-        /*if (id !== "new") {
-            loadDriver();
-        }*/
-        setLoading(false);
-    }, []);
+
+        loadDriversTravels();
+    }, [year, month]);
 
     async function handleNewTravel() {
         setShowTravelForm(true);
@@ -94,17 +98,28 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                 <IoChevronForwardCircleSharp size={25} />
                             </div>
                         </div>
-                        <div className="line-center w-full">
-                            {showTravelForm && <TravelForm />}
+                        <div className="w-full line-center p-2 gap-4 flex-wrap">
+                            {travels.map((item: Travel) => (
+                                <div key={item.id}>
+                                    <TravelItem travel={item} />
+                                </div>
+                            ))}
                         </div>
-                        <div className="line-center w-full">
-                            <div
-                                className="button px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
-                                onClick={() => handleNewTravel()}
-                            >
-                                Adicionar Viagem
+                        <div className="line-center w-full mt-2 pb-8">
+                            {showTravelForm && (
+                                <TravelForm setOpen={setShowTravelForm} />
+                            )}
+                        </div>
+                        {!showTravelForm && (
+                            <div className="line-center w-full py-4">
+                                <div
+                                    className="button px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
+                                    onClick={() => handleNewTravel()}
+                                >
+                                    Adicionar Viagem
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </>
                 )}
             </div>
