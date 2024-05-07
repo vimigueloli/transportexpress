@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { money } from "@/utils/masks";
-import TravelForm from "../forms/travelForm";
+import { littersMask, money } from "@/utils/masks";
+import RefuellingForm from "../forms/refuellingForm";
 import { IoTrashBin, IoPencil, IoReader } from "react-icons/io5";
 import moment from "moment";
 import toast from "react-hot-toast";
 import api from "@/services/api";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
+import MaintenanceForm from "../forms/maintenanceForm";
 
-export interface Travel {
+export interface Maintenance {
     id: number;
-    number: string;
     date: Date;
-    toll_prize?: number;
-    prize: number;
+    obs: string;
+    commission: number;
     driver: {
         id: number;
         name: string;
@@ -22,68 +22,58 @@ export interface Travel {
         plate: string;
         id: number;
     };
-    client: string;
-    commission: number;
-    urban: boolean;
+    cost: number;
 }
 
-interface TravelItemProps {
-    travel: Travel;
+interface MaintenanceItemProps {
+    maintenance: Maintenance;
 }
 
-export default function TravelItem({ travel }: TravelItemProps) {
+export default function MaintenanceItem({ maintenance }: MaintenanceItemProps) {
     const [edit, setEdit] = useState<boolean>(false);
     const cookies = parseCookies();
     const router = useRouter();
 
     async function handleDelete() {
-        const shure = await confirm("deseja mesmo deletar essa viagem?");
+        const shure = await confirm("deseja mesmo deletar essa manutenção?");
         if (shure) {
             try {
-                await api.delete(`travels/${travel.id}`, {
+                await api.delete(`maintenances/${maintenance.id}`, {
                     headers: {
                         Authorization: `Bearer ${cookies.token}`,
                     },
                 });
-                toast.success("Viagem deletada com sucesso!");
+                toast.success("manutenção deletada com sucesso!");
                 router.reload();
             } catch (e: any) {
-                toast.error("falha ao deletar viagem");
+                toast.error("falha ao deletar manutenção");
             }
         }
     }
 
     return edit ? (
         <div className="w-full  line-center">
-            <TravelForm setOpen={setEdit} travel={travel} />
+            <MaintenanceForm setOpen={setEdit} maintenance={maintenance} />
         </div>
     ) : (
         <div className="line-between w-full sm:w-auto items-end  gap-8 flex-wrap p-4 bg-mainDark-400 rounded-lg">
             <div className="text-mainLight-100 font-semibold text-lg">
-                {moment(travel.date).format("DD/MM/YYYY")}
+                {moment(maintenance.date).format("DD/MM/YYYY")}
             </div>
             <div className="text-mainLight-100 font-semibold text-lg">
-                <div className="text-mainLight-500 text-sm">
-                    {travel.urban ? "Número da Red:" : "Número do Vale Frete"}
-                </div>
-                <div>{travel.number}</div>
+                {maintenance.truck.plate}
             </div>
             <div className="text-mainLight-100 font-semibold text-lg">
-                {travel.truck.plate}
-            </div>
-            <div className="text-mainLight-100 font-semibold text-lg">
-                {travel.client}
+                {maintenance.obs}
             </div>
 
             <div className="text-mainLight-100 font-semibold text-lg">
-                <div className="text-mainLight-500 text-sm">
-                    valor arrecadado:
-                </div>
-                <div>{money.format(travel.prize)}</div>
+                <div className="text-mainLight-500 text-sm">Valor Gasto:</div>
+                <div>{money.format(maintenance.cost)}</div>
             </div>
             <div className="text-mainLight-100 font-semibold text-lg">
-                <div className="text-mainLight-500 text-sm">comissão:</div>
-                <div>{money.format(travel.commission)}</div>
+                <div className="text-mainLight-500 text-sm">Comissão:</div>
+                <div>{money.format(maintenance.commission)}</div>
             </div>
             <div className="line-center gap-4">
                 <div

@@ -14,6 +14,14 @@ import {
 } from "react-icons/io5";
 import TravelForm from "@/components/forms/travelForm";
 import TravelItem, { Travel } from "@/components/listItem/travelItem";
+import RefuellingForm from "@/components/forms/refuellingForm";
+import RefuellingItem, {
+    Refuelling,
+} from "@/components/listItem/refuellingItem";
+import MaintenanceItem, {
+    Maintenance,
+} from "@/components/listItem/maintenanceItem";
+import MaintenanceForm from "@/components/forms/maintenanceForm";
 
 interface DriverFormProps {
     id: number | string;
@@ -24,8 +32,14 @@ export default function HistoryForm({ id }: DriverFormProps) {
     const [name, setName] = useState<string>("");
     const [month, setMonth] = useState<string>(moment().format("MM"));
     const [year, setYear] = useState<string>(moment().format("YYYY"));
-    const [travels, setTravels] = useState<Travel[]>([]);
+    const [travels, setTravels] = useState<
+        (Travel | Refuelling | Maintenance)[]
+    >([]);
     const [showTravelForm, setShowTravelForm] = useState<boolean>(false);
+    const [showRefuellingForm, setShowRefuellingForm] =
+        useState<boolean>(false);
+    const [showMaintenanceForm, setShowMaintenanceForm] =
+        useState<boolean>(false);
     const cookies = parseCookies();
     const router = useRouter();
 
@@ -53,10 +67,16 @@ export default function HistoryForm({ id }: DriverFormProps) {
         }
 
         loadDriversTravels();
-    }, [year, month]);
+    }, [year, month, showMaintenanceForm, showRefuellingForm, showTravelForm]);
 
     async function handleNewTravel() {
         setShowTravelForm(true);
+    }
+    async function handleNewRefuelling() {
+        setShowRefuellingForm(true);
+    }
+    async function handleNewMaintenance() {
+        setShowMaintenanceForm(true);
     }
 
     function handleChangeMonth(moveType: boolean) {
@@ -83,25 +103,40 @@ export default function HistoryForm({ id }: DriverFormProps) {
                 )}
                 {!loading && (
                     <>
-                        <div className="line-center gap-16">
+                        <div className="line-center mt-4 gap-16">
                             <div
                                 className="line-center button text-mainLight-500 with-transition"
                                 onClick={() => handleChangeMonth(false)}
                             >
-                                <IoChevronBackCircleSharp size={25} />
+                                <IoChevronBackCircleSharp size={50} />
                             </div>
-                            <div className="line-center">{`${month}/${year}`}</div>
+                            <div className="line-center text-3xl">{`${month}/${year}`}</div>
                             <div
                                 className="line-center button text-mainLight-500 with-transition"
                                 onClick={() => handleChangeMonth(true)}
                             >
-                                <IoChevronForwardCircleSharp size={25} />
+                                <IoChevronForwardCircleSharp size={50} />
                             </div>
                         </div>
                         <div className="w-full line-center p-2 gap-4 flex-wrap">
-                            {travels.map((item: Travel) => (
-                                <div key={item.id}>
-                                    <TravelItem travel={item} />
+                            {travels.map((item: any) => (
+                                <div
+                                    key={`${item.id}-${
+                                        item.urban !== undefined
+                                            ? "Viagem"
+                                            : "Abastecimento"
+                                    }`}
+                                    className="w-full line-center flex-wrap"
+                                >
+                                    {item.urban !== undefined && (
+                                        <TravelItem travel={item} />
+                                    )}
+                                    {item.liters !== undefined && (
+                                        <RefuellingItem refuelling={item} />
+                                    )}
+                                    {item.obs !== undefined && (
+                                        <MaintenanceItem maintenance={item} />
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -109,17 +144,41 @@ export default function HistoryForm({ id }: DriverFormProps) {
                             {showTravelForm && (
                                 <TravelForm setOpen={setShowTravelForm} />
                             )}
+                            {showRefuellingForm && (
+                                <RefuellingForm
+                                    setOpen={setShowRefuellingForm}
+                                />
+                            )}
+                            {showMaintenanceForm && (
+                                <MaintenanceForm
+                                    setOpen={setShowMaintenanceForm}
+                                />
+                            )}
                         </div>
-                        {!showTravelForm && (
-                            <div className="line-center w-full py-4">
-                                <div
-                                    className="button px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
-                                    onClick={() => handleNewTravel()}
-                                >
-                                    Adicionar Viagem
+                        {!showTravelForm &&
+                            !showRefuellingForm &&
+                            !showMaintenanceForm && (
+                                <div className="line-center flex-wrap gap-4 w-full py-4">
+                                    <div
+                                        className="button w-full sm:w-auto sm:px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
+                                        onClick={() => handleNewTravel()}
+                                    >
+                                        Adicionar Viagem
+                                    </div>
+                                    <div
+                                        className="button w-full sm:w-auto sm:px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
+                                        onClick={() => handleNewRefuelling()}
+                                    >
+                                        Adicionar Abastecimento
+                                    </div>
+                                    <div
+                                        className="button w-full sm:w-auto sm:px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
+                                        onClick={() => handleNewMaintenance()}
+                                    >
+                                        Adicionar Manutenção
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
                     </>
                 )}
             </div>

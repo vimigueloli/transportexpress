@@ -237,7 +237,11 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
 
     return (
         <>
-            {loading && <Loading type="spin" />}
+            {loading && (
+                <div className="line-center w-full">
+                    <Loading type="spin" />
+                </div>
+            )}
             {!loading && (
                 <form
                     id="travelForm"

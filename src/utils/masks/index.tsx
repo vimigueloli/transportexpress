@@ -7,6 +7,20 @@ export function cpfMask(cpf: string) {
     return cpf;
 }
 
+export function currencyMask(value: string) {
+    value = value.replace(/\D/g, "");
+    value = value.replace(/(\d)(\d{2})$/, "$1,$2");
+    value = value.replace(/(?=(\d{3})+(\D))\B/g, ".");
+
+    return `R$ ${value}`;
+}
+
+export function littersMask(liters: string) {
+    liters = liters.replace(/\D/g, "");
+    liters = liters.replace(/(\d)(\d{3})$/, "$1,$2");
+
+    return `L ${liters}`;
+}
 // mascara de placa
 export function plateMask(plate: string) {
     plate = plate.replace(/[^a-zA-Z0-9]/g, "");
