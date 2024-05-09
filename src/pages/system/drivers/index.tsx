@@ -69,6 +69,7 @@ export default function Drivers() {
 
     useEffect(() => {
         loadDrivers();
+        console.log("carregando");
     }, []);
 
     return (
