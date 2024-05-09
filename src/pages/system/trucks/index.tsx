@@ -81,7 +81,7 @@ export default function Truckers() {
                         Adicionar Caminhão
                     </div>
                 </div>
-                <div className="line-center px-4 sm:px-16 mt-8 w-full">
+                <div className="line-center px-4 flex-wrap sm:px-16 mt-8 w-full">
                     {loading && (
                         <div className="line-center text-mainLight-500">
                             <Loading type="spin" />
@@ -89,48 +89,51 @@ export default function Truckers() {
                     )}
                     {!loading &&
                         (trucks.length > 0 ? (
-                            <Table columns={["Placa", "Renavan", "Ações"]}>
-                                {trucks.map((item: Truck, idx: number) => (
-                                    <tr
-                                        key={item.id}
-                                        className={`
-                                        h-12 ${
-                                            idx % 2 === 0
-                                                ? "bg-mainDark-400"
-                                                : ""
-                                        }
-                                    `}
-                                    >
-                                        <td className="text-center">
-                                            {item.plate}
-                                        </td>
-                                        <td className="text-center">
-                                            {item.renavan || "Sem registro"}
-                                        </td>
-                                        <td className="line-center gap-2 h-12 ">
-                                            <div
-                                                className="text-red-600 button with-transition"
-                                                onClick={() =>
-                                                    handleDeleteTruck(
-                                                        item.id,
-                                                        item.plate
-                                                    )
-                                                }
-                                            >
-                                                <IoTrashBin size={20} />
-                                            </div>
-                                            <div
-                                                className="text-mainLight-500 button with-transition"
-                                                onClick={() =>
-                                                    handleEditTruck(item.id)
-                                                }
-                                            >
-                                                <IoPencil size={20} />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </Table>
+                            <>
+                                <Table columns={["Placa", "Renavan", "Ações"]}>
+                                    {trucks.map((item: Truck, idx: number) => (
+                                        <tr
+                                            key={item.id}
+                                            className={`
+                                            h-12 ${
+                                                idx % 2 === 0
+                                                    ? "bg-mainDark-400"
+                                                    : ""
+                                            }
+                                        `}
+                                        >
+                                            <td className="text-center">
+                                                {item.plate}
+                                            </td>
+                                            <td className="text-center">
+                                                {item.renavan || "Sem registro"}
+                                            </td>
+                                            <td className="line-center gap-2 h-12 ">
+                                                <div
+                                                    className="text-red-600 button with-transition"
+                                                    onClick={() =>
+                                                        handleDeleteTruck(
+                                                            item.id,
+                                                            item.plate
+                                                        )
+                                                    }
+                                                >
+                                                    <IoTrashBin size={20} />
+                                                </div>
+                                                <div
+                                                    className="text-mainLight-500 button with-transition"
+                                                    onClick={() =>
+                                                        handleEditTruck(item.id)
+                                                    }
+                                                >
+                                                    <IoPencil size={20} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </Table>
+                                <div className="w-full h-12" />
+                            </>
                         ) : (
                             <div className="text-mainLight-100/50 text-3xl">
                                 Sem Registros

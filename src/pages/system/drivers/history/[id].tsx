@@ -139,6 +139,9 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                     )}
                                 </div>
                             ))}
+                            {
+                                // todo colocar valor total da comissão
+                            }
                         </div>
                         <div className="line-center w-full mt-2 pb-8">
                             {showTravelForm && (

@@ -87,7 +87,7 @@ export default function Paths() {
                         Adicionar Trecho
                     </div>
                 </div>
-                <div className="line-center px-4 sm:px-16 mt-8 w-full">
+                <div className="line-center px-4 flex-wrap sm:px-16 mt-8 w-full">
                     {loading && (
                         <div className="line-center text-mainLight-500">
                             <Loading type="spin" />
@@ -95,59 +95,65 @@ export default function Paths() {
                     )}
                     {!loading &&
                         (paths.length > 0 ? (
-                            <Table
-                                columns={[
-                                    "Origem",
-                                    "Destino",
-                                    "Comissão",
-                                    "Ações",
-                                ]}
-                            >
-                                {paths.map((item: Path, idx: number) => (
-                                    <tr
-                                        key={item.id}
-                                        className={`
-                                        h-12 ${
-                                            idx % 2 === 0
-                                                ? "bg-mainDark-400"
-                                                : ""
-                                        }
-                                    `}
-                                    >
-                                        <td className="text-center">
-                                            {item.origin}
-                                        </td>
-                                        <td className="text-center">
-                                            {item.destination || "Sem registro"}
-                                        </td>
-                                        <td className="text-center">
-                                            {money.format(item.suggested_price)}
-                                        </td>
-                                        <td className="line-center gap-2 h-12 ">
-                                            <div
-                                                className="text-red-600 button with-transition"
-                                                onClick={() =>
-                                                    handleDeletePath(
-                                                        item.id,
-                                                        item.origin,
-                                                        item.destination
-                                                    )
-                                                }
-                                            >
-                                                <IoTrashBin size={20} />
-                                            </div>
-                                            <div
-                                                className="text-mainLight-500 button with-transition"
-                                                onClick={() =>
-                                                    handleEditpath(item.id)
-                                                }
-                                            >
-                                                <IoPencil size={20} />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </Table>
+                            <>
+                                <Table
+                                    columns={[
+                                        "Origem",
+                                        "Destino",
+                                        "Comissão",
+                                        "Ações",
+                                    ]}
+                                >
+                                    {paths.map((item: Path, idx: number) => (
+                                        <tr
+                                            key={item.id}
+                                            className={`
+                                            h-12 ${
+                                                idx % 2 === 0
+                                                    ? "bg-mainDark-400"
+                                                    : ""
+                                            }
+                                        `}
+                                        >
+                                            <td className="text-center">
+                                                {item.origin}
+                                            </td>
+                                            <td className="text-center">
+                                                {item.destination ||
+                                                    "Sem registro"}
+                                            </td>
+                                            <td className="text-center">
+                                                {money.format(
+                                                    item.suggested_price
+                                                )}
+                                            </td>
+                                            <td className="line-center gap-2 h-12 ">
+                                                <div
+                                                    className="text-red-600 button with-transition"
+                                                    onClick={() =>
+                                                        handleDeletePath(
+                                                            item.id,
+                                                            item.origin,
+                                                            item.destination
+                                                        )
+                                                    }
+                                                >
+                                                    <IoTrashBin size={20} />
+                                                </div>
+                                                <div
+                                                    className="text-mainLight-500 button with-transition"
+                                                    onClick={() =>
+                                                        handleEditpath(item.id)
+                                                    }
+                                                >
+                                                    <IoPencil size={20} />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </Table>
+                                <div className="w-full h-12" />
+                            </>
                         ) : (
                             <div className="text-mainLight-100/50 text-3xl">
                                 Sem Registros
