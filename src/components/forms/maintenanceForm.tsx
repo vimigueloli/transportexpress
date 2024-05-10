@@ -14,11 +14,13 @@ import { Maintenance } from "../listItem/maintenanceItem";
 interface MaintenanceFormProps {
     setOpen: Function;
     maintenance?: Maintenance;
+    selectedDriver?: Driver;
 }
 
 export default function MaintenanceForm({
     setOpen,
     maintenance,
+    selectedDriver,
 }: MaintenanceFormProps) {
     const [date, setDate] = useState<Date>(new Date());
     const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -180,6 +182,9 @@ export default function MaintenanceForm({
                 trucks.find((item: any) => item.id === maintenance.truck.id)
             );
         }
+        if (selectedDriver) {
+            setDriver(selectedDriver);
+        }
     }, [trucks, drivers]);
 
     return (
@@ -215,14 +220,24 @@ export default function MaintenanceForm({
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                         />
                     </div>
-                    <div className="w-full sm:w-96">
+                    <div className="w-full sm:w-64">
+                        <label>Caminhão</label>
+                        <Select
+                            items={trucks}
+                            selected={truck}
+                            changeSel={setTruck}
+                            required
+                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                        />
+                    </div>
+                    <div className="w-full h-36">
                         <label>Detalhamento</label>
                         <input
                             value={obs}
                             required
                             minLength={6}
                             onChange={(e) => setObs(e.target.value)}
-                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                            className="w-full mt-2 h-32 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                         />
                     </div>
                     <div className="w-full sm:w-64">
@@ -247,27 +262,19 @@ export default function MaintenanceForm({
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                         />
                     </div>
+                    {!selectedDriver && (
+                        <div className="w-full sm:w-64">
+                            <label>Motorista</label>
+                            <Select
+                                items={drivers}
+                                selected={driver}
+                                changeSel={setDriver}
+                                required
+                                className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                            />
+                        </div>
+                    )}
 
-                    <div className="w-full sm:w-64">
-                        <label>Motorista</label>
-                        <Select
-                            items={drivers}
-                            selected={driver}
-                            changeSel={setDriver}
-                            required
-                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                        />
-                    </div>
-                    <div className="w-full sm:w-64">
-                        <label>Caminhão</label>
-                        <Select
-                            items={trucks}
-                            selected={truck}
-                            changeSel={setTruck}
-                            required
-                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                        />
-                    </div>
                     <div className="w-full sm:w-full line-center">
                         <button
                             form="maintenanceForm"

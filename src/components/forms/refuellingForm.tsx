@@ -14,11 +14,13 @@ import { Refuelling } from "../listItem/refuellingItem";
 interface RefuellingFormProps {
     setOpen: Function;
     refuelling?: Refuelling;
+    selectedDriver?: Driver;
 }
 
 export default function RefuellingForm({
     setOpen,
     refuelling,
+    selectedDriver,
 }: RefuellingFormProps) {
     const [date, setDate] = useState<Date>(new Date());
     const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -170,6 +172,9 @@ export default function RefuellingForm({
                 trucks.find((item: any) => item.id === refuelling.truck.id)
             );
         }
+        if (selectedDriver) {
+            setDriver(selectedDriver);
+        }
     }, [trucks, drivers]);
 
     return (
@@ -227,17 +232,18 @@ export default function RefuellingForm({
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                         />
                     </div>
-
-                    <div className="w-full sm:w-64">
-                        <label>Motorista</label>
-                        <Select
-                            items={drivers}
-                            selected={driver}
-                            changeSel={setDriver}
-                            required
-                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                        />
-                    </div>
+                    {!selectedDriver && (
+                        <div className="w-full sm:w-64">
+                            <label>Motorista</label>
+                            <Select
+                                items={drivers}
+                                selected={driver}
+                                changeSel={setDriver}
+                                required
+                                className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                            />
+                        </div>
+                    )}
                     <div className="w-full sm:w-64">
                         <label>Caminhão</label>
                         <Select

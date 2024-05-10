@@ -22,6 +22,7 @@ import MaintenanceItem, {
     Maintenance,
 } from "@/components/listItem/maintenanceItem";
 import MaintenanceForm from "@/components/forms/maintenanceForm";
+import { Driver } from "..";
 
 interface DriverFormProps {
     id: number | string;
@@ -42,6 +43,7 @@ export default function HistoryForm({ id }: DriverFormProps) {
         useState<boolean>(false);
     const cookies = parseCookies();
     const router = useRouter();
+    const [driver, setDriver] = useState<Driver>();
 
     // ? load travels
     useEffect(() => {
@@ -66,6 +68,12 @@ export default function HistoryForm({ id }: DriverFormProps) {
             }
         }
 
+        async function loadSelectedData() {
+            const output = await localStorage.getItem("Driver");
+            console.log("motorista ->", output);
+            setDriver(JSON.parse(output || `{}`));
+        }
+        loadSelectedData();
         loadDriversTravels();
     }, [year, month, showMaintenanceForm, showRefuellingForm, showTravelForm]);
 
@@ -94,7 +102,7 @@ export default function HistoryForm({ id }: DriverFormProps) {
     }
 
     return (
-        <Layout title={name}>
+        <Layout title={driver?.name}>
             <div className="line-center flex-wrap items-start sm:p-8 p-2 h-full w-full">
                 {loading && (
                     <div className="line-center text-mainLight-500 w-full h-full">
@@ -145,15 +153,20 @@ export default function HistoryForm({ id }: DriverFormProps) {
                         </div>
                         <div className="line-center w-full mt-2 pb-8">
                             {showTravelForm && (
-                                <TravelForm setOpen={setShowTravelForm} />
+                                <TravelForm
+                                    selectedDriver={driver}
+                                    setOpen={setShowTravelForm}
+                                />
                             )}
                             {showRefuellingForm && (
                                 <RefuellingForm
+                                    selectedDriver={driver}
                                     setOpen={setShowRefuellingForm}
                                 />
                             )}
                             {showMaintenanceForm && (
                                 <MaintenanceForm
+                                    selectedDriver={driver}
                                     setOpen={setShowMaintenanceForm}
                                 />
                             )}

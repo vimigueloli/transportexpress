@@ -10,30 +10,35 @@ import Loading from "react-loading";
 import { InputMoney } from "../inputs/InputMoney";
 import { Driver } from "@/pages/system/drivers";
 import { Truck } from "@/pages/system/trucks";
-import { money } from "@/utils/masks";
+import { currencyMask, money } from "@/utils/masks";
 import { Travel } from "../listItem/travelItem";
 import { useRouter } from "next/router";
 
 interface travelFormProps {
     setOpen: Function;
     travel?: Travel;
+    selectedDriver?: Driver;
 }
 
-export default function TravelForm({ setOpen, travel }: travelFormProps) {
+export default function TravelForm({
+    setOpen,
+    travel,
+    selectedDriver,
+}: travelFormProps) {
     const [urban, setUrban] = useState<boolean>(false);
     const [numero, setNumero] = useState<string>("");
     const [date, setDate] = useState<Date>(new Date());
     const [paths, setPaths] = useState<Path[]>([]);
     const [path, setPath] = useState<Path>();
-    const [toll, setToll] = useState<number>(0);
+    const [toll, setToll] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const [client, setClient] = useState<string>("");
     const [drivers, setDrivers] = useState<Driver[]>([]);
     const [driver, setDriver] = useState<Driver>();
     const [trucks, setTrucks] = useState<Truck[]>([]);
     const [truck, setTruck] = useState<Truck>();
-    const [prize, setPrize] = useState<number>(0);
-    const [commission, setCommission] = useState<number>(0);
+    const [prize, setPrize] = useState<string>("");
+    const [commission, setCommission] = useState<string>("");
     const cookies = parseCookies();
     const router = useRouter();
 
@@ -96,10 +101,10 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
     // ? update suggested prize
     useEffect(() => {
         if (urban) {
-            setPrize(0);
+            setPrize("R$ 0");
         } else {
             if (path) {
-                setPrize(path.suggested_price);
+                setPrize(money.format(path.suggested_price));
             }
         }
     }, [path, urban]);
@@ -119,11 +124,11 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
             toast.error("Você deve selecionar um caminhão");
             return;
         }
-        if (prize === 0) {
+        if (prize === "R$ 0") {
             toast.error("O valor arrecadado não pode ser 0");
             return;
         }
-        if (commission === 0) {
+        if (commission === "R$ 0") {
             toast.error("O valor de comissão não pode ser 0");
             return;
         }
@@ -144,10 +149,27 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                     urban: urban,
                     number: numero,
                     date: new Date(date),
-                    prize: Number(prize),
-                    commission: commission,
+                    prize: Number(
+                        prize
+                            .replace("R$ ", "")
+                            .replaceAll(".", "")
+                            .replace(",", ".")
+                    ),
+                    commission: Number(
+                        commission
+                            .replace("R$ ", "")
+                            .replaceAll(".", "")
+                            .replace(",", ".")
+                    ),
                     client: urban ? client : path?.name,
-                    toll_prize: urban ? undefined : Number(toll),
+                    toll_prize: urban
+                        ? undefined
+                        : Number(
+                              toll
+                                  .replace("R$ ", "")
+                                  .replaceAll(".", "")
+                                  .replace(",", ".")
+                          ),
                     driver_id: driver?.id,
                     truck_plate: truck?.plate,
                 },
@@ -177,10 +199,27 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                     urban: urban,
                     number: numero,
                     date: new Date(date),
-                    prize: Number(prize),
-                    commission: commission,
+                    prize: Number(
+                        prize
+                            .replace("R$ ", "")
+                            .replaceAll(".", "")
+                            .replace(",", ".")
+                    ),
+                    commission: Number(
+                        commission
+                            .replace("R$ ", "")
+                            .replaceAll(".", "")
+                            .replace(",", ".")
+                    ),
                     client: urban ? client : path?.name,
-                    toll_prize: urban ? undefined : Number(toll),
+                    toll_prize: urban
+                        ? undefined
+                        : Number(
+                              toll
+                                  .replace("R$ ", "")
+                                  .replaceAll(".", "")
+                                  .replace(",", ".")
+                          ),
                     driver_id: driver?.id,
                     truck_plate: truck?.plate,
                 },
@@ -218,11 +257,11 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                     (item: Path) => item.name === travel.client
                 );
                 setPath(actualPath);
-                setToll(travel.toll_prize || 0);
+                setToll(money.format(travel.toll_prize || 0));
             }
             setDate(travel.date);
-            setCommission(travel.commission);
-            setPrize(travel.prize);
+            setCommission(money.format(travel.commission));
+            setPrize(money.format(travel.prize));
             setNumero(travel.number);
             const actualTruck = trucks.find(
                 (item: Truck) => item.id === travel.truck.id
@@ -232,6 +271,10 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                 (item: Driver) => item.id === travel.driver.id
             );
             setDriver(actualDriver);
+        }
+
+        if (selectedDriver) {
+            setDriver(selectedDriver);
         }
     }, [loading, paths, trucks, drivers]);
 
@@ -259,7 +302,7 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                         </div>
                     </div>
 
-                    <div className="line-center items-end h-12 gap-2">
+                    <div className="line-left w-full sm:w-64 items-end h-12 gap-2">
                         <Toggle status={urban} setStatus={setUrban} />
                         {urban ? "Urbano" : "Viagem"}
                     </div>
@@ -285,7 +328,7 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                         />
                     </div>
                     {urban && (
-                        <div>
+                        <div className="w-full sm:w-64">
                             <label>Cliente</label>
                             <input
                                 value={client}
@@ -311,24 +354,28 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                     {!urban && (
                         <div className="w-full sm:w-64">
                             <label>Vale Pedágio</label>
-                            <InputMoney
+                            <input
                                 value={toll}
                                 className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                                onChange={setToll}
+                                onChange={(e) =>
+                                    setToll(currencyMask(e.target.value))
+                                }
                                 required
                             />
                         </div>
                     )}
-                    <div className="w-full sm:w-64">
-                        <label>Motorista</label>
-                        <Select
-                            items={drivers}
-                            selected={driver}
-                            changeSel={setDriver}
-                            required
-                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                        />
-                    </div>
+                    {!selectedDriver && (
+                        <div className="w-full sm:w-64">
+                            <label>Motorista</label>
+                            <Select
+                                items={drivers}
+                                selected={driver}
+                                changeSel={setDriver}
+                                required
+                                className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                            />
+                        </div>
+                    )}
                     <div className="w-full sm:w-64">
                         <label>Caminhão</label>
                         <Select
@@ -339,7 +386,7 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                         />
                     </div>
-                    <div className="w-full sm:w-64">
+                    {/*<div className="w-full sm:w-64">
                         <div>Valor arrecadado:</div>
                         <InputMoney
                             required
@@ -347,14 +394,27 @@ export default function TravelForm({ setOpen, travel }: travelFormProps) {
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                             onChange={setPrize}
                         />
+                </div>*/}
+                    <div className="w-full sm:w-64">
+                        <div>Valor arrecadado:</div>
+                        <input
+                            value={prize}
+                            required
+                            onChange={(e) =>
+                                setPrize(currencyMask(e.target.value))
+                            }
+                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                        />
                     </div>
                     <div className="w-full sm:w-64">
                         <label>Comissão</label>
-                        <InputMoney
+                        <input
                             required
                             value={commission}
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                            onChange={setCommission}
+                            onChange={(e) =>
+                                setCommission(currencyMask(e.target.value))
+                            }
                         />
                     </div>
                     <div className="w-full sm:w-full line-center">

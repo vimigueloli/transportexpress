@@ -28,8 +28,9 @@ export default function Drivers() {
         router.push(`drivers/form/${driverId}`);
     }
 
-    async function handleDriverHistory(driverId: number) {
-        router.push(`drivers/history/${driverId}`);
+    async function handleDriverHistory(driver: Driver) {
+        localStorage.setItem("Driver", JSON.stringify(driver));
+        router.push(`drivers/history/${driver.id}`);
     }
 
     async function handleDeleteDriver(driverId: number, name: string) {
@@ -127,7 +128,7 @@ export default function Drivers() {
                                                         className="text-mainLight-500 button with-transition"
                                                         onClick={() =>
                                                             handleDriverHistory(
-                                                                item.id
+                                                                item
                                                             )
                                                         }
                                                     >
