@@ -56,7 +56,10 @@ export default function MaintenanceItem({ maintenance }: MaintenanceItemProps) {
             <MaintenanceForm setOpen={setEdit} maintenance={maintenance} />
         </div>
     ) : (
-        <div className="line-between w-full sm:w-auto items-end  gap-8 flex-wrap p-4 bg-mainDark-400 rounded-lg">
+        <div className="line-between w-full sm:w-auto items-end sm:gap-y-2 gap-8 flex-wrap p-4 bg-mainDark-400 rounded-lg">
+            <div className="w-full line-center text-mainLight-500 font-semibold text-xl">
+                Manutenção
+            </div>
             <div className="text-mainLight-100 font-semibold text-lg">
                 {moment(maintenance.date).format("DD/MM/YYYY")}
             </div>

@@ -151,7 +151,7 @@ export default function TravelForm({
                     date: new Date(date),
                     prize: Number(
                         prize
-                            .replace("R$ ", "")
+                            .replace("R$", "")
                             .replaceAll(".", "")
                             .replace(",", ".")
                     ),

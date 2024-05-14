@@ -54,7 +54,10 @@ export default function RefuellingItem({ refuelling }: RefuellingItemProps) {
             <RefuellingForm setOpen={setEdit} refuelling={refuelling} />
         </div>
     ) : (
-        <div className="line-between w-full sm:w-auto items-end  gap-8 flex-wrap p-4 bg-mainDark-400 rounded-lg">
+        <div className="line-between w-full sm:w-auto items-end sm:gap-y-2 gap-8 flex-wrap p-4 bg-mainDark-400 rounded-lg">
+            <div className="w-full line-center text-mainLight-500 font-semibold text-xl">
+                Abastecimento
+            </div>
             <div className="text-mainLight-100 font-semibold text-lg">
                 {moment(refuelling.date).format("DD/MM/YYYY")}
             </div>

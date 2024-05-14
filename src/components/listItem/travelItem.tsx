@@ -58,7 +58,10 @@ export default function TravelItem({ travel }: TravelItemProps) {
             <TravelForm setOpen={setEdit} travel={travel} />
         </div>
     ) : (
-        <div className="line-between w-full sm:w-auto items-end  gap-8 flex-wrap p-4 bg-mainDark-400 rounded-lg">
+        <div className="line-between w-full sm:w-auto items-end  gap-8 sm:gap-y-2 flex-wrap p-4 bg-mainDark-400 rounded-lg">
+            <div className="w-full line-center text-mainLight-500 font-semibold text-xl">
+                Viagem
+            </div>
             <div className="text-mainLight-100 font-semibold text-lg">
                 {moment(travel.date).format("DD/MM/YYYY")}
             </div>

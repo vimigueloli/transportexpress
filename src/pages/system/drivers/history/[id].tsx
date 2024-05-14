@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import api from "@/services/api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { cpfMask } from "@/utils/masks";
+import { cpfMask, money } from "@/utils/masks";
 import Loading from "react-loading";
 import { parseCookies } from "nookies";
 import moment from "moment";
@@ -44,6 +44,8 @@ export default function HistoryForm({ id }: DriverFormProps) {
     const cookies = parseCookies();
     const router = useRouter();
     const [driver, setDriver] = useState<Driver>();
+    const [total, setTotal] = useState<number>(0);
+    const [income, setIncome] = useState<number>(0);
 
     // ? load travels
     useEffect(() => {
@@ -59,6 +61,12 @@ export default function HistoryForm({ id }: DriverFormProps) {
                         year: year,
                     },
                 });
+                setTotal(
+                    response.data.travels
+                        .map((item: any) => Number(item.commission))
+                        .filter((item: any) => !isNaN(item))
+                        .reduce((a: number, b: number) => a + b, 0)
+                );
                 setTravels(response.data.travels);
                 setLoading(false);
             } catch (err: any) {
@@ -127,6 +135,14 @@ export default function HistoryForm({ id }: DriverFormProps) {
                             </div>
                         </div>
                         <div className="w-full line-center p-2 gap-4 flex-wrap">
+                            {travels.length === 0 &&
+                                !showTravelForm &&
+                                !showRefuellingForm &&
+                                !showMaintenanceForm && (
+                                    <div className="text-mainLight-500/50 text-3xl">
+                                        Sem registros do motorista esse mês!
+                                    </div>
+                                )}
                             {travels.map((item: any) => (
                                 <div
                                     key={`${item.id}-${
@@ -147,9 +163,6 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                     )}
                                 </div>
                             ))}
-                            {
-                                // todo colocar valor total da comissão
-                            }
                         </div>
                         <div className="line-center w-full mt-2 pb-8">
                             {showTravelForm && (
@@ -170,6 +183,12 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                     setOpen={setShowMaintenanceForm}
                                 />
                             )}
+                        </div>
+                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-mainLight-500">
+                            <div>Comissão total do motorista: {}</div>
+                            <div className=" text-mainLight-500">
+                                {money.format(total)}
+                            </div>
                         </div>
                         {!showTravelForm &&
                             !showRefuellingForm &&
