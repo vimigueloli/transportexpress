@@ -93,7 +93,7 @@ export default function Drivers() {
                     {!loading &&
                         (drivers.length > 0 ? (
                             <>
-                                <Table columns={["Nome", "CPF", "Ações"]}>
+                                <Table columns={["Nome", "Ações"]}>
                                     {drivers.map(
                                         (item: Driver, idx: number) => (
                                             <tr
@@ -109,12 +109,16 @@ export default function Drivers() {
                                                 <td className="text-center">
                                                     {item.name}
                                                 </td>
-                                                <td className="text-center">
+                                                {/*<td className="text-center">
                                                     {item.cpf || "Sem Registro"}
-                                                </td>
+                                                </td>*/}
                                                 <td className="line-center gap-2 h-12 ">
                                                     <div
-                                                        className="text-red-600 button with-transition"
+                                                        className={`${
+                                                            idx % 2 === 0
+                                                                ? "text-mainDark-400"
+                                                                : " text-mainDark-600"
+                                                        } bg-red-600 rounded-full h-10 w-10  button with-transition`}
                                                         onClick={() =>
                                                             handleDeleteDriver(
                                                                 item.id,
@@ -125,17 +129,11 @@ export default function Drivers() {
                                                         <IoTrashBin size={20} />
                                                     </div>
                                                     <div
-                                                        className="text-mainLight-500 button with-transition"
-                                                        onClick={() =>
-                                                            handleDriverHistory(
-                                                                item
-                                                            )
-                                                        }
-                                                    >
-                                                        <IoReader size={20} />
-                                                    </div>
-                                                    <div
-                                                        className="text-mainLight-500 button with-transition"
+                                                        className={`${
+                                                            idx % 2 === 0
+                                                                ? "text-mainDark-400"
+                                                                : " text-mainDark-600"
+                                                        } bg-mainLight-500 rounded-full h-10 w-10  button with-transition`}
                                                         onClick={() =>
                                                             handleEditDriver(
                                                                 item.id
@@ -143,6 +141,20 @@ export default function Drivers() {
                                                         }
                                                     >
                                                         <IoPencil size={20} />
+                                                    </div>
+                                                    <div
+                                                        className={`${
+                                                            idx % 2 === 0
+                                                                ? "text-mainDark-400"
+                                                                : " text-mainDark-600"
+                                                        } bg-mainLight-500 rounded-full h-10 w-10  button with-transition`}
+                                                        onClick={() =>
+                                                            handleDriverHistory(
+                                                                item
+                                                            )
+                                                        }
+                                                    >
+                                                        <IoReader size={20} />
                                                     </div>
                                                 </td>
                                             </tr>

@@ -15,17 +15,17 @@ export default function Home() {
         {
             icon: <RiTruckFill size={50} />,
             path: "trucks",
-            name: "caminhões",
+            name: "Caminhões",
         },
         {
             icon: <RiUser3Fill size={50} />,
             path: "drivers",
-            name: "motoristas",
+            name: "Motoristas",
         },
         {
             icon: <RiTreasureMapFill size={50} />,
             path: "paths",
-            name: "trechos",
+            name: "Trechos",
         },
     ];
 
@@ -38,9 +38,16 @@ export default function Home() {
                             key={item.name}
                             title={item.name}
                             onClick={() => router.push(item.path)}
-                            className="w-32 h-32 bg-mainDark-400 button rounded-xl with-transition line-center text-mainLight-500"
+                            className="w-32 h-32 bg-mainDark-400 gap-0 items-center flex-wrap button rounded-xl with-transition line-center text-mainLight-500"
                         >
-                            {item.icon}
+                            <div>
+                                <div className="w-full line-center">
+                                    {item.icon}
+                                </div>
+                                <div className="line-center w-full mt-2">
+                                    {item.name}
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>

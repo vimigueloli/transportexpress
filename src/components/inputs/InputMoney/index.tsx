@@ -1,3 +1,5 @@
+import { currencyMask, money } from "@/utils/masks";
+import { useEffect, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 type InputMoneyProps = {
@@ -13,20 +15,30 @@ export const InputMoney = ({
     className,
     required,
 }: InputMoneyProps) => {
+    const [display, setDisplay] = useState<string>();
+
+    useEffect(() => {
+        setDisplay(money.format(`${value}`));
+    }, []);
+
+    function handleEdit(newValue: string) {
+        setDisplay(currencyMask(newValue));
+        onChange(
+            Number(
+                currencyMask(newValue)
+                    .replace("R$", "")
+                    .replaceAll(".", "")
+                    .replace(",", ".")
+            )
+        );
+    }
+
     return (
-        <CurrencyInput
-            className={
-                className ||
-                "w-2/3 border border-gray-300 focus:ring-transparent placeholder-gray-400 appearance-none px-2 py-1"
-            }
-            value={value}
-            onValueChange={(value, name, values) =>
-                onChange(values?.float || 0)
-            }
-            decimalsLimit={2}
-            prefix="R$ "
-            allowNegativeValue={false}
-            required={required}
+        <input
+            className={className}
+            inputMode="numeric"
+            value={display}
+            onChange={(e) => handleEdit(e.target.value)}
         />
     );
 };

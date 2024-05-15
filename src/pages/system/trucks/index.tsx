@@ -110,7 +110,11 @@ export default function Truckers() {
                                             </td>
                                             <td className="line-center gap-2 h-12 ">
                                                 <div
-                                                    className="text-red-600 button with-transition"
+                                                    className={`${
+                                                        idx % 2 === 0
+                                                            ? "text-mainDark-400"
+                                                            : " text-mainDark-600"
+                                                    } bg-red-600 rounded-full h-10 w-10  button with-transition`}
                                                     onClick={() =>
                                                         handleDeleteTruck(
                                                             item.id,
@@ -121,7 +125,11 @@ export default function Truckers() {
                                                     <IoTrashBin size={20} />
                                                 </div>
                                                 <div
-                                                    className="text-mainLight-500 button with-transition"
+                                                    className={`${
+                                                        idx % 2 === 0
+                                                            ? "text-mainDark-400"
+                                                            : " text-mainDark-600"
+                                                    } bg-mainLight-500 rounded-full h-10 w-10  button with-transition`}
                                                     onClick={() =>
                                                         handleEditTruck(item.id)
                                                     }

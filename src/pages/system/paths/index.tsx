@@ -129,7 +129,11 @@ export default function Paths() {
                                             </td>
                                             <td className="line-center gap-2 h-12 ">
                                                 <div
-                                                    className="text-red-600 button with-transition"
+                                                    className={`${
+                                                        idx % 2 === 0
+                                                            ? "text-mainDark-400"
+                                                            : " text-mainDark-600"
+                                                    } bg-red-600 rounded-full h-10 w-10  button with-transition`}
                                                     onClick={() =>
                                                         handleDeletePath(
                                                             item.id,
@@ -141,7 +145,11 @@ export default function Paths() {
                                                     <IoTrashBin size={20} />
                                                 </div>
                                                 <div
-                                                    className="text-mainLight-500 button with-transition"
+                                                    className={`${
+                                                        idx % 2 === 0
+                                                            ? "text-mainDark-400"
+                                                            : " text-mainDark-600"
+                                                    } bg-mainLight-500 rounded-full h-10 w-10  button with-transition`}
                                                     onClick={() =>
                                                         handleEditpath(item.id)
                                                     }

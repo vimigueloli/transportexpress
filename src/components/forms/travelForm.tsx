@@ -13,6 +13,7 @@ import { Truck } from "@/pages/system/trucks";
 import { currencyMask, money } from "@/utils/masks";
 import { Travel } from "../listItem/travelItem";
 import { useRouter } from "next/router";
+import PercentField from "../inputs/PercentField";
 
 interface travelFormProps {
     setOpen: Function;
@@ -30,7 +31,7 @@ export default function TravelForm({
     const [date, setDate] = useState<Date>(new Date());
     const [paths, setPaths] = useState<Path[]>([]);
     const [path, setPath] = useState<Path>();
-    const [toll, setToll] = useState<string>("");
+    const [percent, setPercent] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
     const [client, setClient] = useState<string>("");
     const [drivers, setDrivers] = useState<Driver[]>([]);
@@ -162,14 +163,7 @@ export default function TravelForm({
                             .replace(",", ".")
                     ),
                     client: urban ? client : path?.name,
-                    toll_prize: urban
-                        ? undefined
-                        : Number(
-                              toll
-                                  .replace("R$ ", "")
-                                  .replaceAll(".", "")
-                                  .replace(",", ".")
-                          ),
+                    toll_prize: urban ? undefined : 0,
                     driver_id: driver?.id,
                     truck_plate: truck?.plate,
                 },
@@ -212,14 +206,7 @@ export default function TravelForm({
                             .replace(",", ".")
                     ),
                     client: urban ? client : path?.name,
-                    toll_prize: urban
-                        ? undefined
-                        : Number(
-                              toll
-                                  .replace("R$ ", "")
-                                  .replaceAll(".", "")
-                                  .replace(",", ".")
-                          ),
+                    toll_prize: urban ? undefined : 0,
                     driver_id: driver?.id,
                     truck_plate: truck?.plate,
                 },
@@ -257,7 +244,6 @@ export default function TravelForm({
                     (item: Path) => item.name === travel.client
                 );
                 setPath(actualPath);
-                setToll(money.format(travel.toll_prize || 0));
             }
             setDate(travel.date);
             setCommission(money.format(travel.commission));
@@ -277,6 +263,35 @@ export default function TravelForm({
             setDriver(selectedDriver);
         }
     }, [loading, paths, trucks, drivers]);
+
+    // ? calculate the driver commission taking off 10% of taxes
+    useEffect(() => {
+        if (
+            percent &&
+            !isNaN(
+                Number(
+                    prize
+                        .replace("R$", "")
+                        .replaceAll(".", "")
+                        .replace(",", ".")
+                )
+            )
+        ) {
+            setCommission(
+                money.format(
+                    ((Number(
+                        prize
+                            .replace("R$", "")
+                            .replaceAll(".", "")
+                            .replace(",", ".")
+                    ) *
+                        0.9) /
+                        100) *
+                        percent
+                )
+            );
+        }
+    }, [percent, prize]);
 
     return (
         <>
@@ -351,7 +366,7 @@ export default function TravelForm({
                             />
                         </div>
                     )}
-                    {!urban && (
+                    {/*!urban && (
                         <div className="w-full sm:w-64">
                             <label>Vale Pedágio</label>
                             <input
@@ -363,7 +378,7 @@ export default function TravelForm({
                                 required
                             />
                         </div>
-                    )}
+                    )*/}
                     {!selectedDriver && (
                         <div className="w-full sm:w-64">
                             <label>Motorista</label>
@@ -403,7 +418,17 @@ export default function TravelForm({
                             onChange={(e) =>
                                 setPrize(currencyMask(e.target.value))
                             }
+                            inputMode="numeric"
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                        />
+                    </div>
+                    <div className="w-full sm:w-64">
+                        <label>Porcentagem da Comissão</label>
+                        <PercentField
+                            required
+                            value={percent}
+                            className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                            setValue={setPercent}
                         />
                     </div>
                     <div className="w-full sm:w-64">
@@ -415,6 +440,7 @@ export default function TravelForm({
                             onChange={(e) =>
                                 setCommission(currencyMask(e.target.value))
                             }
+                            inputMode="numeric"
                         />
                     </div>
                     <div className="w-full sm:w-full line-center">

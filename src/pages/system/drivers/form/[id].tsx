@@ -29,7 +29,7 @@ export default function DriverForm({ id }: DriverFormProps) {
                         Authorization: `Bearer ${cookies.token}`,
                     },
                 });
-                setCpf(response.data.cpf);
+                // setCpf(response.data.cpf);
                 setName(response.data.name);
                 setLoading(false);
             } catch (err: any) {
@@ -59,7 +59,7 @@ export default function DriverForm({ id }: DriverFormProps) {
                 "/drivers",
                 {
                     name,
-                    cpf,
+                    // cpf,
                 },
                 {
                     headers: {
@@ -84,7 +84,7 @@ export default function DriverForm({ id }: DriverFormProps) {
                 `drivers/${id}`,
                 {
                     name,
-                    cpf,
+                    // cpf,
                 },
                 {
                     headers: {
@@ -131,19 +131,21 @@ export default function DriverForm({ id }: DriverFormProps) {
                                 required
                             />
                         </div>
-                        <div className="line-left w-full sm:w-64 flex-wrap gap-2">
-                            <label>CPF</label>
-                            <input
-                                value={cpf}
-                                className="w-full h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
-                                placeholder="000.000.000-00"
-                                maxLength={14}
-                                // minLength={14}
-                                onChange={(e: any) =>
-                                    setCpf(cpfMask(e.target.value))
-                                }
-                            />
-                        </div>
+                        {/*
+                            <div className="line-left w-full sm:w-64 flex-wrap gap-2">
+                                <label>CPF</label>
+                                <input
+                                    value={cpf}
+                                    className="w-full h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
+                                    placeholder="000.000.000-00"
+                                    maxLength={14}
+                                    // minLength={14}
+                                    onChange={(e: any) =>
+                                        setCpf(cpfMask(e.target.value))
+                                    }
+                                />
+                            </div>
+                            */}
                         <div className="line-right w-full">
                             <button
                                 form="driverForm"

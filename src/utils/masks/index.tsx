@@ -65,6 +65,11 @@ export function numberMask(number: string) {
     number = number.replace(/\D+/g, "");
     return number;
 }
+//mascara percentagem
+export function percentMask(number: string) {
+    number = number.replace(/\D+/g, "");
+    return `% ${number}`;
+}
 
 //mascara celular
 export function celMask(tel: string) {
