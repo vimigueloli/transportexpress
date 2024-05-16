@@ -18,7 +18,7 @@ export const InputMoney = ({
     const [display, setDisplay] = useState<string>();
 
     useEffect(() => {
-        setDisplay(money.format(`${value}`));
+        setDisplay(money.format(value));
     }, []);
 
     function handleEdit(newValue: string) {
