@@ -143,12 +143,21 @@ export default function TravelForm({
 
     async function registerTravel() {
         setLoading(true);
+        console.log(
+            "commission ->",
+            Number(
+                commission
+                    .replace("R$", "")
+                    .replaceAll(".", "")
+                    .replace(",", ".")
+            )
+        );
         try {
             await api.post(
                 "/travels",
                 {
                     urban: urban,
-                    number: numero,
+                    number: numero == "" || numero == null ? undefined : numero,
                     date: new Date(date),
                     prize: Number(
                         prize
@@ -158,7 +167,7 @@ export default function TravelForm({
                     ),
                     commission: Number(
                         commission
-                            .replace("R$ ", "")
+                            .replace("R$", "")
                             .replaceAll(".", "")
                             .replace(",", ".")
                     ),
@@ -191,17 +200,17 @@ export default function TravelForm({
                 `/travels/${travel?.id}`,
                 {
                     urban: urban,
-                    number: numero,
+                    number: numero == "" || numero == null ? undefined : numero,
                     date: new Date(date),
                     prize: Number(
                         prize
-                            .replace("R$ ", "")
+                            .replace("R$", "")
                             .replaceAll(".", "")
                             .replace(",", ".")
                     ),
                     commission: Number(
                         commission
-                            .replace("R$ ", "")
+                            .replace("R$", "")
                             .replaceAll(".", "")
                             .replace(",", ".")
                     ),
@@ -330,7 +339,6 @@ export default function TravelForm({
                             className="w-full mt-2 h-12 rounded-lg text-mainLight-100 outline-mainLight-500/50 px-2 bg-mainDark-600 "
                             placeholder="0000"
                             onChange={(e: any) => setNumero(e.target.value)}
-                            required
                         />
                     </div>
                     <div className="w-full sm:w-64">
