@@ -46,6 +46,7 @@ export default function HistoryForm({ id }: DriverFormProps) {
     const [driver, setDriver] = useState<Driver>();
     const [total, setTotal] = useState<number>(0);
     const [income, setIncome] = useState<number>(0);
+    const [growth, setGrowth] = useState<number>(0);
 
     // ? load travels
     useEffect(() => {
@@ -64,6 +65,12 @@ export default function HistoryForm({ id }: DriverFormProps) {
                 setTotal(
                     response.data.travels
                         .map((item: any) => Number(item.commission))
+                        .filter((item: any) => !isNaN(item))
+                        .reduce((a: number, b: number) => a + b, 0)
+                );
+                setGrowth(
+                    response.data.travels
+                        .map((item: any) => Number(item.prize))
                         .filter((item: any) => !isNaN(item))
                         .reduce((a: number, b: number) => a + b, 0)
                 );
@@ -183,6 +190,12 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                     setOpen={setShowMaintenanceForm}
                                 />
                             )}
+                        </div>
+                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-mainLight-500">
+                            <div>Arrecadamento: {}</div>
+                            <div className=" text-mainLight-500">
+                                {money.format(growth)}
+                            </div>
                         </div>
                         <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-mainLight-500">
                             <div>Comissão total do motorista: {}</div>
