@@ -47,6 +47,9 @@ export default function HistoryForm({ id }: DriverFormProps) {
     const [total, setTotal] = useState<number>(0);
     const [income, setIncome] = useState<number>(0);
     const [growth, setGrowth] = useState<number>(0);
+    const [update, setUpdate] = useState<boolean>(false);
+    const [travelCount, setTravelCount] = useState<number>(0);
+    const [urbanCount, setUrbanCount] = useState<number>(0);
 
     // ? load travels
     useEffect(() => {
@@ -74,6 +77,16 @@ export default function HistoryForm({ id }: DriverFormProps) {
                         .filter((item: any) => !isNaN(item))
                         .reduce((a: number, b: number) => a + b, 0)
                 );
+                let notUrban = response.data.travels.filter(
+                    (item: any) => !item.urban
+                );
+                let urban = response.data.travels.filter(
+                    (item: any) => item.urban
+                );
+
+                setTravelCount(notUrban.length);
+                setUrbanCount(urban.length);
+
                 setTravels(response.data.travels);
                 setLoading(false);
             } catch (err: any) {
@@ -90,7 +103,14 @@ export default function HistoryForm({ id }: DriverFormProps) {
         }
         loadSelectedData();
         loadDriversTravels();
-    }, [year, month, showMaintenanceForm, showRefuellingForm, showTravelForm]);
+    }, [
+        year,
+        month,
+        showMaintenanceForm,
+        showRefuellingForm,
+        showTravelForm,
+        update,
+    ]);
 
     async function handleNewTravel() {
         setShowTravelForm(true);
@@ -141,72 +161,11 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                 <IoChevronForwardCircleSharp size={50} />
                             </div>
                         </div>
-                        <div className="w-full line-center p-2 gap-4 flex-wrap">
-                            {travels.length === 0 &&
-                                !showTravelForm &&
-                                !showRefuellingForm &&
-                                !showMaintenanceForm && (
-                                    <div className="text-mainLight-500/50 text-3xl">
-                                        Sem registros do motorista esse mês!
-                                    </div>
-                                )}
-                            {travels.map((item: any) => (
-                                <div
-                                    key={`${item.id}-${
-                                        item.urban !== undefined
-                                            ? "Viagem"
-                                            : "Abastecimento"
-                                    }`}
-                                    className="w-full line-center flex-wrap"
-                                >
-                                    {item.urban !== undefined && (
-                                        <TravelItem travel={item} />
-                                    )}
-                                    {item.liters !== undefined && (
-                                        <RefuellingItem refuelling={item} />
-                                    )}
-                                    {item.obs !== undefined && (
-                                        <MaintenanceItem maintenance={item} />
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                        <div className="line-center w-full mt-2 pb-8">
-                            {showTravelForm && (
-                                <TravelForm
-                                    selectedDriver={driver}
-                                    setOpen={setShowTravelForm}
-                                />
-                            )}
-                            {showRefuellingForm && (
-                                <RefuellingForm
-                                    selectedDriver={driver}
-                                    setOpen={setShowRefuellingForm}
-                                />
-                            )}
-                            {showMaintenanceForm && (
-                                <MaintenanceForm
-                                    selectedDriver={driver}
-                                    setOpen={setShowMaintenanceForm}
-                                />
-                            )}
-                        </div>
-                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-mainLight-500">
-                            <div>Arrecadamento: {}</div>
-                            <div className=" text-mainLight-500">
-                                {money.format(growth)}
-                            </div>
-                        </div>
-                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-mainLight-500">
-                            <div>Comissão total do motorista: {}</div>
-                            <div className=" text-mainLight-500">
-                                {money.format(total)}
-                            </div>
-                        </div>
+
                         {!showTravelForm &&
                             !showRefuellingForm &&
                             !showMaintenanceForm && (
-                                <div className="line-center flex-wrap gap-4 w-full py-4">
+                                <div className="line-center flex-wrap gap-8 mt-8 w-full">
                                     <div
                                         className="button w-full sm:w-auto sm:px-4 h-10 text-lg rounded-lg sm:rounded-xl text-mainLight-500 border border-mainLight-500 bg-mainDark-400"
                                         onClick={() => handleNewTravel()}
@@ -227,6 +186,105 @@ export default function HistoryForm({ id }: DriverFormProps) {
                                     </div>
                                 </div>
                             )}
+
+                        <div className="line-center w-full mt-2 pb-8">
+                            {showTravelForm && (
+                                <TravelForm
+                                    selectedDriver={driver}
+                                    setOpen={setShowTravelForm}
+                                    updater={setUpdate}
+                                    updaterState={update}
+                                />
+                            )}
+                            {showRefuellingForm && (
+                                <RefuellingForm
+                                    selectedDriver={driver}
+                                    setOpen={setShowRefuellingForm}
+                                />
+                            )}
+                            {showMaintenanceForm && (
+                                <MaintenanceForm
+                                    selectedDriver={driver}
+                                    setOpen={setShowMaintenanceForm}
+                                />
+                            )}
+                        </div>
+                        <div className="w-full line-center p-2 gap-4 flex-wrap">
+                            {travels.length === 0 &&
+                                !showTravelForm &&
+                                !showRefuellingForm &&
+                                !showMaintenanceForm && (
+                                    <div className="text-mainLight-500/50 text-3xl">
+                                        Sem registros do motorista esse mês!
+                                    </div>
+                                )}
+                            {travels.map((item: any) => (
+                                <div
+                                    key={`${item.id}-${
+                                        item.urban !== undefined
+                                            ? "Viagem"
+                                            : "Abastecimento"
+                                    }`}
+                                    className="w-full line-center flex-wrap"
+                                >
+                                    {item.urban !== undefined && (
+                                        <TravelItem
+                                            travel={item}
+                                            updater={setUpdate}
+                                            updaterState={update}
+                                        />
+                                    )}
+                                    {item.liters !== undefined && (
+                                        <RefuellingItem refuelling={item} />
+                                    )}
+                                    {item.obs !== undefined && (
+                                        <MaintenanceItem maintenance={item} />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {travels.length > 0 && (
+                            <div className="line-center mt-4 gap-16">
+                                <div
+                                    className="line-center button text-mainLight-500 with-transition"
+                                    onClick={() => handleChangeMonth(false)}
+                                >
+                                    <IoChevronBackCircleSharp size={50} />
+                                </div>
+                                <div className="line-center text-3xl">{`${month}/${year}`}</div>
+                                <div
+                                    className="line-center button text-mainLight-500 with-transition"
+                                    onClick={() => handleChangeMonth(true)}
+                                >
+                                    <IoChevronForwardCircleSharp size={50} />
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t mt-10 border-mainLight-500">
+                            <div>Urbano: </div>
+                            <div className=" text-mainLight-500">
+                                {urbanCount}
+                            </div>
+                            <div>Transferência:</div>
+                            <div className=" text-mainLight-500">
+                                {travelCount}
+                            </div>
+                        </div>
+                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-mainLight-500">
+                            <div>Arrecadamento:</div>
+                            <div className=" text-mainLight-500">
+                                {money.format(growth)}
+                            </div>
+                        </div>
+                        <div className="line-center w-full  py-4 gap-4 flex-wrap border-t border-b border-mainLight-500">
+                            <div>Comissão total do motorista:</div>
+                            <div className=" text-mainLight-500">
+                                {money.format(total)}
+                            </div>
+                        </div>
+                        <div className="w-full h-16" />
                     </>
                 )}
             </div>

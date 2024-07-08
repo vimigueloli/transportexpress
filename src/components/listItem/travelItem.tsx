@@ -29,9 +29,15 @@ export interface Travel {
 
 interface TravelItemProps {
     travel: Travel;
+    updater?: any;
+    updaterState?: boolean;
 }
 
-export default function TravelItem({ travel }: TravelItemProps) {
+export default function TravelItem({
+    travel,
+    updater,
+    updaterState,
+}: TravelItemProps) {
     const [edit, setEdit] = useState<boolean>(false);
     const cookies = parseCookies();
     const router = useRouter();
@@ -46,7 +52,7 @@ export default function TravelItem({ travel }: TravelItemProps) {
                     },
                 });
                 toast.success("Viagem deletada com sucesso!");
-                router.reload();
+                updater(!updaterState);
             } catch (e: any) {
                 toast.error("falha ao deletar viagem");
             }
@@ -55,7 +61,12 @@ export default function TravelItem({ travel }: TravelItemProps) {
 
     return edit ? (
         <div className="w-full  line-center">
-            <TravelForm setOpen={setEdit} travel={travel} />
+            <TravelForm
+                setOpen={setEdit}
+                travel={travel}
+                updaterState={updaterState}
+                updater={updater}
+            />
         </div>
     ) : (
         <div className="line-between w-full sm:w-auto items-end  gap-8 sm:gap-y-2 flex-wrap p-4 bg-mainDark-400 rounded-lg">

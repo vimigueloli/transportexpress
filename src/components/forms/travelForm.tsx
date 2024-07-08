@@ -19,12 +19,16 @@ interface travelFormProps {
     setOpen: Function;
     travel?: Travel;
     selectedDriver?: Driver;
+    updater?: any;
+    updaterState?: boolean;
 }
 
 export default function TravelForm({
     setOpen,
     travel,
     selectedDriver,
+    updater,
+    updaterState,
 }: travelFormProps) {
     const [urban, setUrban] = useState<boolean>(false);
     const [numero, setNumero] = useState<string>("");
@@ -185,7 +189,9 @@ export default function TravelForm({
             setLoading(false);
             toast.success("✅ Viagem registrada com sucesso!");
             setOpen(false);
-            router.reload();
+            // router.reload();
+            updater(!updaterState);
+            // ! update without reload
         } catch (e: any) {
             toast.error("falha ao registrar viagem");
             console.log("erro->", e.response.data.message);
@@ -228,7 +234,8 @@ export default function TravelForm({
             setLoading(false);
             toast.success("✅ Viagem editada com sucesso!");
             setOpen(false);
-            router.reload();
+            // router.reload();
+            updater(!updaterState);
         } catch (e: any) {
             toast.error("falha ao editar viagem");
             console.log("erro->", e.response.data.message);
