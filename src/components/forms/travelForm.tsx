@@ -105,9 +105,7 @@ export default function TravelForm({
 
     // ? update suggested prize
     useEffect(() => {
-        if (urban) {
-            setPrize("R$ 0");
-        } else {
+        if (!urban){
             if (path) {
                 setPrize(money.format(path.suggested_price));
             }
@@ -189,9 +187,7 @@ export default function TravelForm({
             setLoading(false);
             toast.success("✅ Viagem registrada com sucesso!");
             setOpen(false);
-            // router.reload();
             updater(!updaterState);
-            // ! update without reload
         } catch (e: any) {
             toast.error("falha ao registrar viagem");
             console.log("erro->", e.response.data.message);
@@ -263,7 +259,6 @@ export default function TravelForm({
             }
             setDate(travel.date);
             setCommission(money.format(travel.commission));
-            setPrize(money.format(travel.prize));
             setNumero(travel.number);
             const actualTruck = trucks.find(
                 (item: Truck) => item.id === travel.truck.id
@@ -273,6 +268,7 @@ export default function TravelForm({
                 (item: Driver) => item.id === travel.driver.id
             );
             setDriver(actualDriver);
+            setPrize(money.format(travel.prize));
         }
 
         if (selectedDriver) {
